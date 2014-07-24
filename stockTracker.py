@@ -4,7 +4,11 @@ from datetime import datetime
 from openpyxl import Workbook
 from openpyxl import load_workbook
 
-wb = load_workbook('portfolios/testIndex.xlsx')
+current_date = "{:%B %d, %Y}".format(datetime.now())
+current_month = "{:%B}".format(datetime.now())
+num_month = "{:%m}".format(datetime.now())
+current_year = "{:%Y}".format(datetime.now())
+wb = load_workbook('My Index ' + current_year + '.xlsx')
 ws = wb.active
 num_stocks = 10
 my_portfolio = {}
@@ -23,6 +27,5 @@ for i in range(2,num_stocks+2):
 	cell_of_current_price = 'S' + str(i)
 	ws[cell_of_current_price] = my_stock_price
 
-current_date = "{:%B %d, %Y}".format(datetime.now())
-wb.save('portfolios/testIndex_' + current_date +'.xlsx')
+wb.save(num_month + ' - ' + current_month + '/My Index ' + current_date + '.xlsx')
 print("Portfolio has been saved.")
