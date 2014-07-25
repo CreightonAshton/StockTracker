@@ -47,22 +47,28 @@ def save_stocks(wb_name):
 def new_portfolio():
 	user_name = str(input("What is your name? "))
 	num_stocks = int(input("How many stocks do you want to track? "))
+	wb = Workbook()
+	ws = wb.active
+	ws.title = user_name + "'s Portfolio"
+	print(ws.title)
 	
 	
-new_old = ""
-while new_old != 'new' or new_old != 'open':
-	new_old = str(input("New file: new    Open existing file: open \n"))
-	if new_old == "new":
-		new_portfolio()
-		break
-	elif new_old == "open":
-		wb_name = str(input("What is the name of your portfolio? "))
-		file_path = wb_name + '.xlsx'
-		update_stocks(file_path)
-		break
-	else:
-		print ("Please enter either new or open.")
+def startup():	
+	new_old = ""
+	while new_old != 'new' or new_old != 'open':
+		new_old = str(input("New file: new    Open existing file: open \n"))
+		if new_old == "new":
+			new_portfolio()
+			break
+		elif new_old == "open":
+			wb_name = str(input("What is the name of your portfolio? "))
+			file_path = wb_name + '.xlsx'
+			update_stocks(file_path)
+			break
+		else:
+			print ("Please enter either new or open.")
 
+startup()			
 #update_stocks('My Index ' + current_year + '.xlsx')
 #save_stocks('My Index ' + current_year + '.xlsx')
 
