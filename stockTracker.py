@@ -22,11 +22,15 @@ def update_stocks (wb_name):
 		content.close()
 		soup = BeautifulSoup(page_holder)
 		span_id = 'yfs_l84_' + my_stock_name.lower()
-		my_stock_price = float(soup.find(id=span_id).string)
-		print ("Current value of ", my_stock_name, " is $", my_stock_price, ".", sep="")
-		#my_portfolio[my_stock_name] = my_stock_price
-		cell_of_current_price = 'S' + str(i)
-		ws[cell_of_current_price] = my_stock_price
+		span_value = soup.find(id=span_id)
+		if span_value == None:
+			print(my_stock_name + " was not a recognized stock symbol")
+		else:
+			my_stock_price = float(span_value.string)
+			print ("Current value of ", my_stock_name, " is $", my_stock_price, ".", sep="")
+			#my_portfolio[my_stock_name] = my_stock_price
+			cell_of_current_price = 'S' + str(i)
+			ws[cell_of_current_price] = my_stock_price
 	ans = ""
 	while ans != 'y' or ans != 'n':
 		ans = str(input("Would you like to save your portfolio? (y/n) "))
@@ -50,8 +54,86 @@ def new_portfolio():
 	wb = Workbook()
 	ws = wb.active
 	ws.title = user_name + "'s Portfolio"
-	print(ws.title)
+	ws['A1'] = "Symbol"
+	ws['B1'] = "Quantity"
+	ws['C1'] = "Price"
+	ws['D1'] = "Total*"
+	ws['E1'] = "Plus Fees"
+	ws['F1'] = "Jan."
+	ws['G1'] = "Feb."
+	ws['H1'] = "Mar."
+	ws['I1'] = "Apr."
+	ws['J1'] = "May"
+	ws['K1'] = "Jun."
+	ws['L1'] = "Jul."
+	ws['M1'] = "Aug."
+	ws['N1'] = "Sep."
+	ws['O1'] = "Oct."
+	ws['P1'] = "Nov."
+	ws['Q1'] = "Dec."
 	
+	ws['S1'] = "Current"
+	
+	ws['U1'] = "Net Gain/(Loss)*"
+	ws['V1'] = "Net % Gain/Loss*"
+	
+	ws['X1'] = "Net Gain/(Loss)"
+	ws['Y1'] = "Net % Gain/Loss"
+	
+	
+	for i in range(2, num_stocks + 2):
+		my_stock_name = str(input("Stock Name: ")).upper()
+		cell_of_symbol = 'A' + str(i)
+		ws[cell_of_symbol] = my_stock_name
+		quant = int(input("How many shares of " + my_stock_name + "? "))
+		cell_of_quant = 'B' + str(i)
+		ws[cell_of_quant] = quant
+		orig_price = float(input("Initial Stock Price: "))
+		cell_of_orig_price = 'C' + str(i)
+		ws[cell_of_orig_price] = orig_price
+		cell_of_subtot = 'D' + str(i)
+		ws[cell_of_subtot] = orig_price * quant
+		fees = float(input("Commissions/Fees: "))
+		cell_of_tot = 'E' + str(i)
+		ws[cell_of_tot] = (orig_price * quant) + fees
+		
+		content = urlopen('http://finance.yahoo.com/q?s=' + my_stock_name)
+		page_holder = content.read()
+		content.close()
+		soup = BeautifulSoup(page_holder)
+		span_id = 'yfs_l84_' + my_stock_name.lower()
+		span_value = soup.find(id=span_id)
+		if span_value == None:
+			print(my_stock_name + " was not a recognized stock symbol")
+		else:
+			my_stock_price = float(span_value.string)
+			print ("Current value of ", my_stock_name, " is $", my_stock_price, ".", sep="")
+			cell_of_current_price = 'S' + str(i)
+			ws[cell_of_current_price] = my_stock_price
+	
+	temp_cell_name = 'A' + str(num_stocks + 3)
+	ws[temp_cell_name] = "TOTAL"
+	temp_cell_name = 'A' + str(num_stocks + 5)
+	ws[temp_cell_name] = "Net Gain/(Loss)*"
+	temp_cell_name = 'A' + str(num_stocks + 6)
+	ws[temp_cell_name] = "Net % Gain/Loss*"
+	temp_cell_name = 'A' + str(num_stocks + 8)
+	ws[temp_cell_name] = "Net Gain/(Loss)"
+	temp_cell_name = 'A' + str(num_stocks + 9)
+	ws[temp_cell_name] = "Net % Gain/Loss"
+	
+	ans = ""
+	while ans != 'y' or ans != 'n':
+		ans = str(input("Would you like to save your portfolio? (y/n) "))
+		if ans == 'y':
+			wb.save(num_month + ' - ' + current_month + '/' + user_name + " Portfolio - " + current_date + '.xlsx')
+			print("Portfolio has been saved.")
+			break
+		elif ans == 'n':
+			break
+		else:
+			print("Please enter either y or n")
+
 	
 def startup():	
 	new_old = ""
