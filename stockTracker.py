@@ -13,7 +13,15 @@ current_year = "{:%Y}".format(datetime.now())
 def update_stocks (wb_name):
 	wb = load_workbook(wb_name)
 	ws = wb.active
-	num_stocks = 10
+	
+	num_stocks = 0
+	x = 2
+	cell_counter = 'A2'
+	while ws[cell_counter].value != None:
+		num_stocks += 1
+		x += 1
+		cell_counter = 'A' + str(x)
+	
 	for i in range(2,num_stocks+2):
 		cell_of_symbol = 'A' + str(i)
 		my_stock_name = ws[cell_of_symbol].value
@@ -31,6 +39,7 @@ def update_stocks (wb_name):
 			#my_portfolio[my_stock_name] = my_stock_price
 			cell_of_current_price = 'S' + str(i)
 			ws[cell_of_current_price] = my_stock_price
+	
 	ans = ""
 	while ans != 'y' or ans != 'n':
 		ans = str(input("Would you like to save your portfolio? (y/n) "))
